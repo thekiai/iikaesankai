@@ -26,7 +26,7 @@ client = OpenAI(api_key=settings.openai_api_key.get_secret_value())
 logger = configure_logging()
 
 # Set up CORS
-origins = ["http://localhost:3000"]
+origins = [settings.frontend_url]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
