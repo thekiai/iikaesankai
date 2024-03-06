@@ -8,7 +8,6 @@ import * as ReactDOM from "react-dom/client"
 import { Home } from "./pages/Home"
 import reportWebVitals from "./reportWebVitals"
 import * as serviceWorker from "./serviceWorker"
-import { Result } from "./pages/Result";
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 
@@ -23,7 +22,6 @@ root.render(
       <React.StrictMode>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/result" element={<Result />} />
         </Routes>
       </React.StrictMode>,
     </BrowserRouter>
