@@ -24,7 +24,7 @@ export const ContentCard: React.FC<ContentType> = ({
     const handleVote = async (paraphrase_id: string) => {
         setSelectedOption(paraphrase_id);
         try {
-            await axios.post(`${API_ENDPOINT}/vote`, {
+            await axios.post(`${API_ENDPOINT}/vote/`, {
                 paraphrase_id: paraphrase_id,
             });
 

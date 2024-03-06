@@ -43,7 +43,7 @@ export const Home = () => {
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      const result = await axios.post(`${API_ENDPOINT}/iikae`, formData);
+      const result = await axios.post(`${API_ENDPOINT}/iikae/`, formData);
       setNewContent(result.data.content);
       onOpen();
     } catch (error: any) {

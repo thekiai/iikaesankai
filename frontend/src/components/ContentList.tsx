@@ -10,7 +10,7 @@ import { API_ENDPOINT } from '../assets/constants';
 const PAGE_SIZE = 10;  // ページごとのアイテム数
 
 const fetchContents = async (page: number, order_by: string) => {
-    const response = await axios.get(`${API_ENDPOINT}/contents?page=${page}&order_by=${order_by}`);
+    const response = await axios.get(`${API_ENDPOINT}/contents/?page=${page}&order_by=${order_by}`);
     return response.data.contents;
 };
 
