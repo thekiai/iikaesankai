@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from fastapi import Depends, FastAPI
+from fastapi import BackgroundTasks, Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from openai import OpenAI
 from sqlalchemy.orm import Session
@@ -151,12 +151,20 @@ async def post_iikae(
     )
 
 
+def add_vote_count_background(session: Session, paraphrase_id: str):
+    add_vote_count(session, paraphrase_id)
+
+
 @app.post("/vote/")
 async def vote(
     vote_request: VoteRequest,
+    background_tasks: BackgroundTasks,
     session: Session = Depends(get_db_session_for_depends),
 ):
-    add_vote_count(session, vote_request.paraphrase_id)
+    # タスクをバックグラウンドで実行
+    background_tasks.add_task(
+        add_vote_count_background, session, vote_request.paraphrase_id
+    )
     return {"message": "success"}
 
 
