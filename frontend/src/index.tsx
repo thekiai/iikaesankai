@@ -23,7 +23,7 @@ root.render(
         <Routes>
           <Route path="/" element={<Home />} />
         </Routes>
-      </React.StrictMode>,
+      </React.StrictMode>
     </BrowserRouter>
     <ReactQueryDevtools />
   </QueryClientProvider>
