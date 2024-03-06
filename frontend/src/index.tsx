@@ -25,7 +25,7 @@ root.render(
         </Routes>
       </React.StrictMode>,
     </BrowserRouter>
-    {/* <ReactQueryDevtools /> */}
+    <ReactQueryDevtools />
   </QueryClientProvider>
 )
 
