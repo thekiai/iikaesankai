@@ -4,7 +4,7 @@ from __future__ import annotations
 from sqlalchemy import desc
 from sqlalchemy.orm import Session
 
-from core.constants import OrderBy
+from core.constants import NUM_PARAPHRASES_PER_CONTENT, OrderBy
 from models.custom_types.content import Content, Paraphrase as ParaphraseType
 from models.sqlmodels.input import Input
 from models.sqlmodels.paraphrase import Paraphrase
@@ -26,7 +26,7 @@ def get_contents_by_order(
         .filter(Input.deleted_at.is_(None))
         .order_by(desc(order_column))
         .offset(skip)
-        .limit(limit)
+        .limit(limit * NUM_PARAPHRASES_PER_CONTENT)
         .all()
     )
 
