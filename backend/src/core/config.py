@@ -40,6 +40,7 @@ class Settings(BaseSettings):
     db_port: str
     db_username: str
     openai_api_key: SecretStr
+    instance_connection_name: str = ""
 
     class Config:
         case_sensitive = False
