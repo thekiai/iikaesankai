@@ -1,7 +1,7 @@
 export const mainColor = "#5170ff"
 export const subColor = "#e0ba33"
 
-const DEV_ENDPOINT = "https://iikaesankai-api-h3sm47ypsa-an.a.run.app"
+const DEV_ENDPOINT = "https://api-h3sm47ypsa-uc.a.run.app"
 const PROD_ENDPOINT = "https://iikaesankai.com"
 
 const hostname = window.location.hostname
