@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "iikaesankai"
+version = "0.1.0"
+description = ""
+authors = []
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "^0.110.0"
+uvicorn = {extras = ["standard"], version = "^0.27.1"}
+python-dotenv = "^1.0.1"
+sqlmodel = "^0.0.16"
+pydantic-settings = "^2.2.1"
+mysql-connector-python = "^8.3.0"
+mysqlclient = "^2.2.4"
+ulid-py = "^1.1.0"
+openai = "^1.13.3"
+google-cloud-secret-manager = "^2.18.3"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.2"
+black = "^24.2.0"
+alembic = "^1.13.1"
+isort = "^5.13.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

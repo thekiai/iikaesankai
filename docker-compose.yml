@@ -1,0 +1,51 @@
+services:
+  api:
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile
+    ports:
+      - '8003:80'
+    depends_on:
+      - db
+    extra_hosts:
+      - "localhost:host-gateway"
+    environment:
+      ENV_NAME: ${ENV_NAME:-local}
+    networks:
+      iikaesankai_network:
+        aliases:
+            - api.iikaesankai_network.local
+  db:
+    image: mysql:8.0
+    cap_add:
+      - SYS_NICE
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: iikaesankai
+      MYSQL_USER: iikaesankai_user
+      MYSQL_PASSWORD: iikaesankai_password
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+    networks:
+      iikaesankai_network:
+        aliases:
+            - db.iikaesankai_network.local
+  web:
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+    ports:
+      - '3000:4200'
+    depends_on:
+      - api
+    networks:
+      iikaesankai_network:
+        aliases:
+            - web.iikaesankai_network.local
+networks:
+  iikaesankai_network:
