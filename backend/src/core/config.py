@@ -35,7 +35,7 @@ else:
 class Settings(BaseSettings):
     env_name: str
     db_name: str
-    db_host: str
+    db_host: str = ""
     db_password: SecretStr
     db_port: str
     db_username: str
