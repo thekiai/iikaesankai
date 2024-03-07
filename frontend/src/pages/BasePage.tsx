@@ -1,8 +1,4 @@
-
-
-import {
-    ChakraProvider, Box, Text, VStack, Button, theme, useDisclosure, Tooltip,
-} from "@chakra-ui/react";
+import { ChakraProvider, Box, Text, VStack, Button, theme, useDisclosure, Tooltip, Link } from "@chakra-ui/react";
 import { Logo } from "../components/Logo";
 import axios from "axios";
 import { useState } from "react";
@@ -11,7 +7,7 @@ import { API_ENDPOINT, mainColor } from "../assets/constants";
 import { ContentType } from "../types/ContentType";
 import InputSection from "../components/InputSection";
 import CustomModal from "../components/CustomModal";
-
+import { Link as RouterLink } from "react-router-dom";
 
 interface BasePageProps {
     children: React.ReactNode;
@@ -73,10 +69,9 @@ export const BasePage: React.FC<BasePageProps> = ({ children }) => {
     return (
         <ChakraProvider theme={theme}>
             <VStack spacing={8} mt={8} mb={52}>
-                <Text color="gray" mx={4}>
-                    言いにくいことをAIが言い換えて言い返すモヤモヤ解決プラットフォーム！
-                </Text>
-                <Logo h="30vmin" pointerEvents="none" />
+                <Link as={RouterLink} to="/">
+                    <Logo h="30vmin" pointerEvents="none" />
+                </Link>
                 <Box position="sticky" top="5%" zIndex="docked">
                     <Tooltip label="言い換えを考え中🤔 10秒以上かかっちゃうかも" hasArrow placement="bottom" isOpen={loading}>
                         <Button
