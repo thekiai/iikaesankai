@@ -101,8 +101,10 @@ export const Home = () => {
           </Button>
 
           {loading && (
-            <Text color="grey">言い換えを考え中🤔 10秒以上かかっちゃうかも🙏 下にある他の言い換えを見て待っててね。</Text>
+            <Text color="gray">言い換えを考え中🤔 10秒以上かかっちゃうかも。 下にある他の言い換えを見て待っててね↓</Text>
           )}
+
+          <Box h={8} />
 
           <Modal isOpen={isOpen} onClose={handleModalClose} size="xl">
             <ModalOverlay />
