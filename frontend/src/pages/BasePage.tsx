@@ -69,6 +69,9 @@ export const BasePage: React.FC<BasePageProps> = ({ children }) => {
     return (
         <ChakraProvider theme={theme}>
             <VStack spacing={8} mt={8} mb={52}>
+                <Text color="gray">
+                    言いにくいことをAIが言い換えて言い返すモヤモヤ解決プラットフォーム！
+                </Text>
                 <Link as={RouterLink} to="/">
                     <Logo h="30vmin" pointerEvents="none" />
                 </Link>
