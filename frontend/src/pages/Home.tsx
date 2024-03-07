@@ -47,18 +47,23 @@ export const Home = () => {
       setNewContent(result.data.content);
       onOpen();
     } catch (error: any) {
+      setNewContent(null);
+      onOpen();
       console.error(error);
     } finally {
       setLoading(false);
     }
   };
+
   const handleModalClose = () => {
-    setFormData({
-      what: "",
-      who: "",
-      detail: "",
-    });
-    setIsFormValid(false);
+    if (newContent !== null) {
+      setFormData({
+        what: "",
+        who: "",
+        detail: "",
+      });
+      setIsFormValid(false);
+    }
     onClose();
   };
 
@@ -95,6 +100,10 @@ export const Home = () => {
             いい感じに言い換える
           </Button>
 
+          {loading && (
+            <Text color="grey">言い換えを考え中🤔 10秒以上かかっちゃうかも🙏 下にある他の言い換えを見て待っててね。</Text>
+          )}
+
           <Modal isOpen={isOpen} onClose={handleModalClose} size="xl">
             <ModalOverlay />
             <ModalContent>
@@ -108,7 +117,7 @@ export const Home = () => {
                   detail={newContent.detail}
                   paraphrases={newContent.paraphrases}
                 /> : <Text>
-                  ごめん、何かエラーが起きたみたい。もう一度試してみてね😭
+                  何かエラーが起きたみたい😭 ごめんだけどもう一度試してみてね。
                 </Text>}
               </ModalBody>
               <ModalFooter>
