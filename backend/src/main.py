@@ -15,6 +15,7 @@ from models.requests.iikae_request import IikaeRequest
 from models.requests.vote_request import VoteRequest
 from models.responses.get_contents_response import GetContentsResponse
 from models.responses.post_iikae_response import PostIikaeResponse
+from models.sqlmodels.paraphrase import Paraphrase
 from repositories.content import get_contents_by_order
 from repositories.input import create_input
 from repositories.paraphrase import add_vote_count, create_paraphrase
@@ -131,7 +132,7 @@ async def post_iikae(
         what=iikae_request.what,
         detail=iikae_request.detail,
     )
-    paraphrases = []
+    paraphrases: list[Paraphrase] = []
     for generated_text in generated_texts:
         paraphrases.append(create_paraphrase(session, input.id, generated_text))
 
