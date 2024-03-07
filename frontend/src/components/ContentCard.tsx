@@ -65,7 +65,7 @@ export const ContentCard: React.FC<ContentType> = ({
         <VStack spacing={4}>
             <HStack ml="auto">
                 <Menu>
-                    <MenuButton mt={2} mr={2}>
+                    <MenuButton mt={2}>
                         <IconButton
                             isRound
                             aria-label="share-button"
