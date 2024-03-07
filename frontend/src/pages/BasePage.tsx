@@ -72,8 +72,8 @@ export const BasePage: React.FC<BasePageProps> = ({ children }) => {
 
     return (
         <ChakraProvider theme={theme}>
-            <VStack spacing={8} marginTop={8}>
-                <Text color="gray">
+            <VStack spacing={8} mt={8} mb={52}>
+                <Text color="gray" mx={4}>
                     言いにくいことをAIが言い換えて言い返すモヤモヤ解決プラットフォーム！
                 </Text>
                 <Logo h="30vmin" pointerEvents="none" />

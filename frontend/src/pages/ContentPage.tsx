@@ -30,7 +30,7 @@ export const ContentPage = () => {
   }, []);
   return (
     <BasePage>
-      <VStack spacing={8} mb={8} maxWidth="500px">
+      <VStack spacing={8} maxWidth="500px">
         {loading ? (
           <Spinner size="xl" />
         ) : contentData ? (
