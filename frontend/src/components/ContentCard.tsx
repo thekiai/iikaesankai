@@ -83,7 +83,7 @@ export const ContentCard: React.FC<ContentType> = ({
                     </MenuList>
                 </Menu>
             </HStack>
-            <VStack mb={4} maxWidth="90%">
+            <VStack mb={4}>
                 <VStack >
                     <Text fontSize="lg" fontWeight="bold" color={subColor}>
                         {who}
@@ -116,7 +116,7 @@ export const ContentCard: React.FC<ContentType> = ({
                         totalVotes === 0 ? 0 : (voteCount / totalVotes) * 100;
 
                     return (
-                        <Box key={paraphrase.paraphrase_id} width="90%" textAlign="start">
+                        <Box key={paraphrase.paraphrase_id} width="100%" textAlign="start">
                             <Card
                                 variant="outline"
                                 borderWidth="1px"
