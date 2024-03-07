@@ -6,7 +6,7 @@ from openai import OpenAI
 from sqlalchemy.orm import Session
 
 from core.config import settings
-from core.constants import AI_MODEL, TEMPERATURE
+from core.constants import AI_MODEL, TEMPERATURE, TEST_POST_IIKAE_RESPONSE
 from core.db_settings import get_db_session_for_depends
 from core.logging import configure_logging
 from models.custom_types.content import Content
@@ -48,6 +48,12 @@ async def root():
 async def post_iikae(
     iikae_request: IikaeRequest, session: Session = Depends(get_db_session_for_depends)
 ):
+    if settings.is_test:
+        import time
+
+        time.sleep(3)
+        return TEST_POST_IIKAE_RESPONSE
+
     # limit the text length
     if (
         len(iikae_request.what) > 100

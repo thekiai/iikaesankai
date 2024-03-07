@@ -42,6 +42,7 @@ class Settings(BaseSettings):
     openai_api_key: SecretStr
     instance_connection_name: str = ""
     frontend_url: str
+    is_test: bool = False
 
     class Config:
         case_sensitive = False
