@@ -45,26 +45,27 @@ async def root():
 
 @app.post("/iikae/", response_model=PostIikaeResponse)
 async def post_iikae(
-    iikae_text: IikaeRequest, session: Session = Depends(get_db_session_for_depends)
+    iikae_request: IikaeRequest, session: Session = Depends(get_db_session_for_depends)
 ):
     # limit the text length
     if (
-        len(iikae_text.what) > 100
-        or len(iikae_text.who) > 100
-        or len(iikae_text.detail) > 200
+        len(iikae_request.what) > 100
+        or len(iikae_request.who) > 100
+        or len(iikae_request.detail) > 200
     ):
         raise ValueError("Text length is too long")
 
-    print(iikae_text)
+    logger.info(f"iikae_request: {iikae_request}")
+
     text = f"""
 [言いたいこと]
-{iikae_text.what}
+{iikae_request.what}
 
 [相手]
-{iikae_text.who}
+{iikae_request.who}
 
 [背景]
-{iikae_text.detail}
+{iikae_request.detail}
 """
     system_message = """
 ##役割##
@@ -112,26 +113,27 @@ async def post_iikae(
                 },
             ],
         )
-        iikae_texts = completion.choices[0].message.content.split("\n\n")
-        iikae_texts = [
-            iikae_text.replace("---", "").strip() for iikae_text in iikae_texts
+        generated_texts = completion.choices[0].message.content.split("\n\n")
+        generated_texts = [
+            iikae_text.replace("---", "").strip() for iikae_text in generated_texts
         ]
-        print("results")
-        print(iikae_texts)
-        if len(iikae_texts) == 3:
+
+        logger.info(f"generated_texts: {generated_texts}")
+
+        if len(generated_texts) == 3:
             break
         elif i + 1 == MAX_RETRIES:
             raise Exception("Failed to generate response")
 
     input = create_input(
         session,
-        who=iikae_text.who,
-        what=iikae_text.what,
-        detail=iikae_text.detail,
+        who=iikae_request.who,
+        what=iikae_request.what,
+        detail=iikae_request.detail,
     )
     paraphrases = []
-    for result in iikae_texts:
-        paraphrases.append(create_paraphrase(session, input.id, result))
+    for generated_text in generated_texts:
+        paraphrases.append(create_paraphrase(session, input.id, generated_text))
 
     return PostIikaeResponse(
         content=Content(
