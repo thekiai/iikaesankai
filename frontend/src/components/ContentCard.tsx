@@ -83,7 +83,7 @@ export const ContentCard: React.FC<ContentType> = ({
                     </MenuList>
                 </Menu>
             </HStack>
-            <VStack mb={4}>
+            <VStack mb={4} maxWidth="90%">
                 <VStack >
                     <Text fontSize="lg" fontWeight="bold" color={subColor}>
                         {who}
