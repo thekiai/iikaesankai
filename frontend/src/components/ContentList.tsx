@@ -40,7 +40,7 @@ export const ContentList: React.FC = () => {
         >
             <VStack spacing={8}>
                 {contents.map((content: ContentType) => (
-                    <Box key={content.content_id} borderWidth="2px" borderRadius="lg" padding={8} >
+                    <Box key={content.content_id} padding={8} borderTop="2px" borderColor="gray.200" borderStyle="dashed">
                         <ContentCard content_id={content.content_id} who={content.who} what={content.what} detail={content.detail} paraphrases={content.paraphrases} />
                     </Box>
                 ))}
