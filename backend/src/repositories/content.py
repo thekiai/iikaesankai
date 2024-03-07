@@ -51,3 +51,33 @@ def get_contents_by_order(
             )
 
     return contents
+
+
+def get_content_by_id(session: Session, content_id: str) -> Content:
+    query_result = (
+        session.query(Input, Paraphrase)
+        .join(
+            Paraphrase,
+            Input.id == Paraphrase.input_id,
+        )
+        .filter(Input.id == content_id)
+        .filter(Input.deleted_at.is_(None))
+        .all()
+    )
+    input: Input = query_result[0][0]
+    content = Content(
+        content_id=content_id,
+        who=input.who,
+        what=input.what,
+        detail=input.detail,
+        paraphrases=[],
+    )
+    for _, paraphrase in query_result:
+        paraphrase = ParaphraseType(
+            paraphrase_id=paraphrase.id,
+            content=paraphrase.content,
+            vote_count=paraphrase.vote_count,
+        )
+        content.paraphrases.append(paraphrase)
+
+    return content

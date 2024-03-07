@@ -6,11 +6,18 @@ import {
     Card,
     useColorModeValue,
     HStack,
+    Menu,
+    MenuButton,
+    MenuList,
+    MenuItem,
+    IconButton,
+    useClipboard,
+    useToast
 } from "@chakra-ui/react";
 import { API_ENDPOINT, mainColor, subColor } from "../assets/constants";
 import { ContentType } from "../types/ContentType";
 import axios from "axios";
-
+import { FiShare } from "react-icons/fi";
 export const ContentCard: React.FC<ContentType> = ({
     content_id,
     who,
@@ -33,14 +40,49 @@ export const ContentCard: React.FC<ContentType> = ({
             console.error("投票エラー:", error);
         }
     };
+
+    const shareLink = `${window.location.origin}/contents/${content_id}`;  // 共有リンク
+    const shareText = `${who}に\n「${what}」と言いたい🙋 \n\n どう言い換える？🤖💬\n\n`;
+    const { hasCopied, onCopy } = useClipboard(shareLink);
+    const toast = useToast();
     const cardBorderColor = useColorModeValue("gray.200", "gray.700");
     const selectedCardColor = useColorModeValue("gray.100", "gray.700");
     const totalVotes = 1 + paraphrases.reduce(
         (acc, paraphrase) => acc + paraphrase.vote_count,
         0
     );
+    const handleCopyClick = () => {
+        onCopy();
+        toast({
+            render: () => (
+                <Box color="white" p={3} bg={mainColor} borderRadius="lg">
+                    リンクをコピーしました
+                </Box>
+            ),
+        });
+    };
     return (
         <VStack spacing={4}>
+            <HStack ml="auto">
+                <Menu>
+                    <MenuButton mt={2} mr={2}>
+                        <IconButton
+                            isRound
+                            aria-label="share-button"
+                            variant='solid'
+                            icon={<FiShare />}
+                        />
+                    </MenuButton>
+                    <MenuList>
+                        <MenuItem onClick={handleCopyClick}>
+                            リンクをコピー
+                        </MenuItem>
+                        <MenuItem as='a' href={encodeURI(`https://twitter.com/intent/post?url=${shareLink}&text=${shareText}`) + "%23いいかえさんかい%0A%20"} target='_blank'>
+                            Xでシェア
+                        </MenuItem>
+                    </MenuList>
+                </Menu>
+            </HStack>
             <VStack mb={4}>
                 <VStack >
                     <Text fontSize="lg" fontWeight="bold" color={subColor}>
@@ -61,7 +103,7 @@ export const ContentCard: React.FC<ContentType> = ({
             <VStack spacing={4}>
                 <HStack>
                     <Text fontSize="md">
-                        {votingCompleted ? "投票ありがとう✨" : "↓ どの言い換えがお好み？😋"}
+                        {votingCompleted ? "投票ありがとう✨" : "↓ どの言い換えがお好み？💛"}
                     </Text>
                     {votingCompleted && <Text fontSize="sm" color="gray.500" >
                         投票数: {totalVotes}

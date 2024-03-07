@@ -1,0 +1,119 @@
+
+
+import {
+    ChakraProvider, Box, Text, VStack, Button, theme, useDisclosure, Tooltip,
+} from "@chakra-ui/react";
+import { Logo } from "../components/Logo";
+import axios from "axios";
+import { useState } from "react";
+import { ContentCard } from "../components/ContentCard";
+import { API_ENDPOINT, mainColor } from "../assets/constants";
+import { ContentType } from "../types/ContentType";
+import InputSection from "../components/InputSection";
+import CustomModal from "../components/CustomModal";
+
+
+interface BasePageProps {
+    children: React.ReactNode;
+}
+
+export const BasePage: React.FC<BasePageProps> = ({ children }) => {
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isOpen: isOpenInput, onOpen: onOpenInput, onClose: onCloseInput } = useDisclosure();
+
+    const [formData, setFormData] = useState({
+        what: "",
+        who: "",
+        detail: "",
+    });
+
+    const [loading, setLoading] = useState(false);
+    const [newContent, setNewContent] = useState<ContentType | null>();
+    const [isFormValid, setIsFormValid] = useState(false);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, label: string) => {
+        const updatedFormData = {
+            ...formData,
+            [label]: e.target.value,
+        };
+        setFormData(updatedFormData);
+        // Check if all form fields have non-empty values
+        const isValid = Object.values(updatedFormData).every((value) => value.trim() !== "");
+        setIsFormValid(isValid);
+    };
+
+    const handleSubmit = async () => {
+        try {
+            setLoading(true);
+            onCloseInput();
+            const result = await axios.post(`${API_ENDPOINT}/iikae/`, formData);
+            setNewContent(result.data.content);
+            onOpen();
+        } catch (error: any) {
+            setNewContent(null);
+            onOpen();
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleModalClose = () => {
+        if (newContent !== null) {
+            setFormData({
+                what: "",
+                who: "",
+                detail: "",
+            });
+            setIsFormValid(false);
+        }
+        onClose();
+    };
+
+    return (
+        <ChakraProvider theme={theme}>
+            <VStack spacing={8} marginTop={8}>
+                <Logo h="30vmin" pointerEvents="none" />
+                <Box position="sticky" top="5%" zIndex="docked">
+                    <Tooltip label="言い換えを考え中🤔 10秒以上かかっちゃうかも" hasArrow placement="bottom" isOpen={loading}>
+                        <Button
+                            variant="outline"
+                            color="white"
+                            backgroundColor={mainColor}
+                            borderColor={mainColor}
+                            size="md"
+                            onClick={onOpenInput}
+                            _hover={{ backgroundColor: "white", color: mainColor }}
+                            isLoading={loading}
+                            borderRadius="full"
+                        >
+                            いいかえて！
+                        </Button>
+                    </Tooltip>
+                </Box>
+                <CustomModal isOpen={isOpenInput} onClose={onCloseInput}>
+                    <InputSection
+                        formData={formData}
+                        isFormValid={isFormValid}
+                        loading={loading}
+                        handleChange={handleChange}
+                        handleSubmit={handleSubmit}
+                    />
+                </CustomModal>
+
+                <CustomModal isOpen={isOpen} onClose={handleModalClose}>
+                    {newContent ? <ContentCard
+                        content_id={newContent.content_id}
+                        who={newContent.who}
+                        what={newContent.what}
+                        detail={newContent.detail}
+                        paraphrases={newContent.paraphrases}
+                    /> : <Text>
+                        何かエラーが起きたみたい😭 ごめんだけどもう一度試してみてね。
+                    </Text>}
+                </CustomModal>
+                {children}
+            </VStack>
+        </ChakraProvider>
+    );
+};

@@ -10,6 +10,7 @@ import reportWebVitals from "./reportWebVitals"
 import * as serviceWorker from "./serviceWorker"
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { ContentPage } from "./pages/ContentPage";
 
 const queryClient = new QueryClient();
 const container = document.getElementById("root")
@@ -22,6 +23,7 @@ root.render(
       <React.StrictMode>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/contents/:content_id" element={<ContentPage />} />
         </Routes>
       </React.StrictMode>
     </BrowserRouter>

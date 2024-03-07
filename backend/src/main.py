@@ -16,7 +16,7 @@ from models.requests.vote_request import VoteRequest
 from models.responses.get_contents_response import GetContentsResponse
 from models.responses.post_iikae_response import PostIikaeResponse
 from models.sqlmodels.paraphrase import Paraphrase
-from repositories.content import get_contents_by_order
+from repositories.content import get_content_by_id, get_contents_by_order
 from repositories.input import create_input
 from repositories.paraphrase import add_vote_count, create_paraphrase
 
@@ -190,3 +190,11 @@ async def get_contents(
         order_by=order_by,
     )
     return GetContentsResponse(contents=contents)
+
+
+@app.get("/contents/{content_id}/", response_model=Content)
+async def get_content(
+    content_id: str, session: Session = Depends(get_db_session_for_depends)
+):
+    content = get_content_by_id(session, content_id)
+    return content
