@@ -46,9 +46,6 @@ export const ContentPage = () => {
         ) : (
           <Text>ごめんね😭エラーだ</Text>
         )}
-        <Text>
-          その他の言い換えたやつ ↓
-        </Text>
       </VStack>
     </BasePage>
   )
