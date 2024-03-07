@@ -74,7 +74,7 @@ export const ContentCard: React.FC<ContentType> = ({
                         totalVotes === 0 ? 0 : (voteCount / totalVotes) * 100;
 
                     return (
-                        <Box key={paraphrase.paraphrase_id} maxWidth="500px" textAlign="start">
+                        <Box key={paraphrase.paraphrase_id} width="500px" textAlign="start">
                             <Card
                                 variant="outline"
                                 borderWidth="1px"

@@ -38,7 +38,7 @@ export const ContentList: React.FC = () => {
             loader={<p>Loading...</p>}
             scrollThreshold={0.9}
         >
-            <VStack spacing={8} maxWidth="500px">
+            <VStack spacing={8}>
                 {contents.map((content: ContentType) => (
                     <Box key={content.content_id} borderWidth="2px" borderRadius="lg" padding={8} >
                         <ContentCard content_id={content.content_id} who={content.who} what={content.what} detail={content.detail} paraphrases={content.paraphrases} />
