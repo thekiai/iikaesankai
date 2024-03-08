@@ -77,7 +77,7 @@ export const ContentCard: React.FC<ContentType> = ({
                         <MenuItem onClick={handleCopyClick}>
                             リンクをコピー
                         </MenuItem>
-                        <MenuItem as='a' href={encodeURI(`https://twitter.com/intent/post?url=${shareLink}&text=${shareText}`) + "%23いいかえさんかい%0A%20"} target='_blank'>
+                        <MenuItem as='a' href={encodeURI(`https://twitter.com/intent/post?url=${shareLink}&text=${shareText}`) + "%23いいかえさんかい！%0A%20"} target='_blank'>
                             Xでシェア
                         </MenuItem>
                     </MenuList>
