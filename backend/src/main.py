@@ -6,7 +6,12 @@ from openai import OpenAI
 from sqlalchemy.orm import Session
 
 from core.config import settings
-from core.constants import AI_MODEL, TEMPERATURE, TEST_POST_IIKAE_RESPONSE
+from core.constants import (
+    AI_MODEL,
+    NUM_PARAPHRASES_PER_CONTENT,
+    TEMPERATURE,
+    TEST_POST_IIKAE_RESPONSE,
+)
 from core.db_settings import get_db_session_for_depends
 from core.logging import configure_logging
 from models.custom_types.content import Content
@@ -74,34 +79,35 @@ async def post_iikae(
 [背景]
 {iikae_request.detail}
 """
+
     system_message = """
-##役割##
-あなたは言いにくいことを面白く言い換える天才です。
+# 役割
+あなたは人々が抱える「言いにくいこと」を面白く言い換える天才です。
 
-##指示##
-例え話などを盛り込んでユーザが抱える言いにくいことを面白く言い換えて伝えてください。回答は3パターン用意し、三つ目は関西弁でお願いします。フォーマットは以下の通りです。
-「---」で囲まれた中身を出力して、「---」自体は出力しないでください。
+# 指示
+ユーザが入力した「言いにくいこと」を、例え話などを盛り込み面白く言い換えてください。
+回答はアプローチを変えて3パターンで簡潔に、3つ目の回答は関西弁でお願いします。
 
-##例##
-ユーザーの入力：
+# 例
+ユーザー：
 ---
+[誰に]
+会社のお偉いさん
+
 [言いたいこと]
-飲み会に誘わないでほしいです
+カツラずれてますよ
 
-[相手]
-上司
-
-[背景]
-会社の上司に頻繁に飲み会に誘われて困っている
+[詳しく]
+たまに会社のお偉いさんと一緒にゴルフに行くことがあるが、よくカツラがずれていて気まずい
 ---
 
-あなたの出力：
+あなた：
 ---
-ここのところ私のお財布も定期的にダイエット中なんです。お酒代を節約するために、今回はお誘いを辞退させていただければと思っています。
+社長、今日の風、なかなかのやんちゃ坊主ですね。お帽子の下の小鳥さんが巣立ちそうになってますよ。
 
-最近、胃薬の株価が上昇傾向なんです。今回はアルコールとの距離を置いて、少し充電をしてみるのも悪くないかなと思っているんです。
+社長、今のプレイは素晴らしかったですね。でも、どうやら頭上の草原が少し南に移動しているようです。風のせいかもしれませんね。
 
-今、肝臓がキャンプファイヤーやってる感じで、ヤバいかもしれへんねん。今回は酒とおさらばして、ちょっとお休みしてみようかなって思てるねん。
+社長さん、今日の頭ん上、ちょっとお出かけモードやないですか？カツラさんが、"今日はこっち行こか～"って、ちょっとお散歩してるみたいですわ。
 ---
 """
     MAX_RETRIES = 3
@@ -127,10 +133,13 @@ async def post_iikae(
 
         logger.info(f"generated_texts: {generated_texts}")
 
-        if len(generated_texts) == 3:
+        if len(generated_texts) == NUM_PARAPHRASES_PER_CONTENT:
+            logger.info("Successfully generated response")
             break
         elif i + 1 == MAX_RETRIES:
             raise Exception("Failed to generate response")
+        else:
+            logger.warning("Failed to generate response. Retrying...")
 
     input = create_input(
         session,
