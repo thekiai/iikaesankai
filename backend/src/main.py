@@ -67,8 +67,6 @@ async def post_iikae(
     ):
         raise ValueError("Text length is too long")
 
-    logger.info(f"iikae_request: {iikae_request}")
-
     text = f"""
 [言いたいこと]
 {iikae_request.what}
@@ -76,7 +74,7 @@ async def post_iikae(
 [相手]
 {iikae_request.who}
 
-[背景]
+[詳しく]
 {iikae_request.detail}
 """
 
@@ -87,8 +85,9 @@ async def post_iikae(
 # 指示
 ユーザが入力した「言いにくいこと」を、例え話などを盛り込み面白く言い換えてください。
 回答はアプローチを変えて3パターンで簡潔に、3つ目の回答は関西弁でお願いします。
+もしもユーザーの入力が[誰に] [言いたいこと] [詳しく] と関係ないものや公序良俗に反するものであったり、[詳しく] に正しい文章が書かれていないときは「無効な入力かい！」とだけ返答してください。
 
-# 例
+# 例1
 ユーザー：
 ---
 [誰に]
@@ -109,6 +108,24 @@ async def post_iikae(
 
 社長さん、今日の頭ん上、ちょっとお出かけモードやないですか？カツラさんが、"今日はこっち行こか～"って、ちょっとお散歩してるみたいですわ。
 ---
+
+# 例2
+ユーザー：
+---
+[誰に]
+友達
+
+[言いたいこと]
+おはよう
+
+[詳しく]
+あああ
+---
+
+あなた：
+---
+無効な入力かい！
+---
 """
     MAX_RETRIES = 3
     for i in range(MAX_RETRIES):
@@ -126,7 +143,17 @@ async def post_iikae(
                 },
             ],
         )
-        generated_texts = completion.choices[0].message.content.split("\n\n")
+
+        generated_message = completion.choices[0].message.content
+
+        if "無効な入力かい！" in generated_message:
+            logger.info(f"Got invalid input: {iikae_request}")
+            raise ValueError("Invalid input")
+        else:
+            logger.info(f"iikae_request: {iikae_request}")
+
+        generated_texts = generated_message.split("\n\n")
+
         generated_texts = [
             iikae_text.replace("---", "").strip() for iikae_text in generated_texts
         ]
