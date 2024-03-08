@@ -10,7 +10,7 @@ class OrderBy(str, Enum):
 
 
 AI_MODEL = "gpt-4-turbo-preview"
-TEMPERATURE = 0.1
+TEMPERATURE = 1
 
 PROJECT_NAME = "iikaesankai"
 
