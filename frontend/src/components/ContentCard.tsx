@@ -10,7 +10,6 @@ import {
     MenuButton,
     MenuList,
     MenuItem,
-    IconButton,
     useClipboard,
     useToast
 } from "@chakra-ui/react";
@@ -66,12 +65,9 @@ export const ContentCard: React.FC<ContentType> = ({
             <HStack ml="auto">
                 <Menu>
                     <MenuButton mt={2}>
-                        <IconButton
-                            isRound
-                            aria-label="share-button"
-                            variant='solid'
-                            icon={<FiShare />}
-                        />
+                        <Box borderRadius="full" p={3} bg="gray.100">
+                            <FiShare />
+                        </Box>
                     </MenuButton>
                     <MenuList>
                         <MenuItem onClick={handleCopyClick}>
