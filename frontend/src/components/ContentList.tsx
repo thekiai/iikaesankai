@@ -1,58 +1,83 @@
-import { useInfiniteQuery } from 'react-query';
-import { useState } from 'react';
-import axios from 'axios';
-import { VStack, Box, Center } from '@chakra-ui/react';
-import InfiniteScroll from 'react-infinite-scroll-component';
+import React, { useState, useEffect } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
+import axios from "axios";
+import { VStack, Box, Center } from "@chakra-ui/react";
 import { ContentCard } from "./ContentCard";
-import { ContentType } from '../types/ContentType';
-import { API_ENDPOINT } from '../assets/constants';
-import { CustomSpinner } from './CustomSpinner';
+import { ContentType } from "../types/ContentType";
+import { API_ENDPOINT } from "../assets/constants";
+import { CustomSpinner } from "./CustomSpinner";
 
 const PER_PAGE = 5;
 
 const fetchContents = async (page: number, order_by: string) => {
-    const response = await axios.get(`${API_ENDPOINT}/contents/?page=${page}&per_page=${PER_PAGE}&order_by=${order_by}`);
+    const response = await axios.get(
+        `${API_ENDPOINT}/contents/?page=${page}&per_page=${PER_PAGE}&order_by=${order_by}`
+    );
     return response.data.contents;
 };
 
 export const ContentList: React.FC = () => {
-    const [orderBy, setOrderBy] = useState('latest');  // latestまたはranking
+    const [orderBy, setOrderBy] = useState("latest"); // latestまたはranking
     const [currentPage, setCurrentPage] = useState(1);
+    const [contents, setContents] = useState<ContentType[]>([]);
+    const [hasNextPage, setHasNextPage] = useState(true);
+    const [isFetching, setIsFetching] = useState(true);
 
-    const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
-        'contents',
-        ({ pageParam = 1 }) => {
-            setCurrentPage(pageParam); // 現在のページ番号をセット
-            return fetchContents(pageParam, orderBy);
-        },
-        {
-            getNextPageParam: (lastPage, pages) => {
-                if (lastPage.length === PER_PAGE) {
-                    return currentPage + 1;
-                }
-                return undefined;  // 次のページがない場合
-            },
-            staleTime: 6000000, // 100分間キャッシュを利用
+    const fetchData = async () => {
+        try {
+            const newItems = await fetchContents(currentPage, orderBy);
+            setContents((prevItems) => [...prevItems, ...newItems]);
+            if (newItems.length < PER_PAGE) {
+                setHasNextPage(false);
+            }
+            setCurrentPage((prevPage) => prevPage + 1);
+        } catch (error) {
+            console.error("Error fetching data: ", error);
+            setHasNextPage(false);
+        } finally {
+            setIsFetching(false);
         }
-    );
+    };
 
-    const contents = data ? data.pages.flat() : [];
+    useEffect(() => {
+        fetchData();
+    }, []);
 
-    return ((isFetching && currentPage === 1) ? <CustomSpinner /> :
-        <InfiniteScroll
-            dataLength={contents.length}
-            next={() => fetchNextPage()}
-            hasMore={hasNextPage ?? false}
-            loader={<Center> <CustomSpinner /></Center>}
-            scrollThreshold={0.9}
-        >
-            <VStack spacing={8} maxWidth="500px">
-                {contents.map((content: ContentType) => (
-                    <Box key={content.content_id} borderTop="2px" borderColor="gray.200" borderStyle="dashed">
-                        <ContentCard content_id={content.content_id} who={content.who} what={content.what} detail={content.detail} paraphrases={content.paraphrases} />
-                    </Box>
-                ))}
-            </VStack>
-        </InfiniteScroll>
+    const fetchMoreData = () => {
+        fetchData();
+    };
+
+    return (
+        <>
+            {isFetching && currentPage === 1 ? (
+                <CustomSpinner />
+            ) : (
+                <InfiniteScroll
+                    dataLength={contents.length}
+                    next={fetchMoreData}
+                    hasMore={hasNextPage}
+                    loader={<Center> <CustomSpinner /> </Center>}
+                >
+                    <VStack spacing={8} maxWidth="500px">
+                        {contents.map((content: ContentType) => (
+                            <Box
+                                key={content.content_id}
+                                borderTop="2px"
+                                borderColor="gray.200"
+                                borderStyle="dashed"
+                            >
+                                <ContentCard
+                                    content_id={content.content_id}
+                                    who={content.who}
+                                    what={content.what}
+                                    detail={content.detail}
+                                    paraphrases={content.paraphrases}
+                                />
+                            </Box>
+                        ))}
+                    </VStack>
+                </InfiniteScroll>
+            )}
+        </>
     );
 };
