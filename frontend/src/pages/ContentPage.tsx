@@ -1,5 +1,5 @@
 import {
-  ChakraProvider, Box, Text, VStack, Spinner,
+  Box, Text, VStack,
 } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import { BasePage } from "./BasePage";
@@ -8,6 +8,7 @@ import { ContentType } from "../types/ContentType";
 import axios from "axios";
 import { API_ENDPOINT } from "../assets/constants";
 import { ContentCard } from "../components/ContentCard";
+import { CustomSpinner } from "../components/CustomSpinner";
 
 export const ContentPage = () => {
   const { content_id } = useParams<{ content_id: string }>();
@@ -32,7 +33,7 @@ export const ContentPage = () => {
     <BasePage>
       <VStack spacing={8} maxWidth="500px">
         {loading ? (
-          <Spinner size="xl" />
+          <CustomSpinner />
         ) : contentData ? (
           <Box borderTop="2px" borderColor="gray.200" borderStyle="dashed">
             <ContentCard
