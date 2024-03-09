@@ -57,6 +57,7 @@ export const ContentList: React.FC = () => {
                     next={fetchMoreData}
                     hasMore={hasNextPage}
                     loader={<Center> <CustomSpinner /> </Center>}
+                    style={{ overflow: 'hidden' }}  // 内側のスクロールバーを非表示にする
                 >
                     <VStack spacing={8} maxWidth="500px">
                         {contents.map((content: ContentType) => (
