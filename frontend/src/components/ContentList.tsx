@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from 'react-query';
 import { useState } from 'react';
 import axios from 'axios';
-import { VStack, Box } from '@chakra-ui/react';
+import { VStack, Box, Center } from '@chakra-ui/react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { ContentCard } from "./ContentCard";
 import { ContentType } from '../types/ContentType';
@@ -38,12 +38,12 @@ export const ContentList: React.FC = () => {
 
     const contents = data ? data.pages.flat() : [];
 
-    return (isFetching ? <CustomSpinner /> :
+    return ((isFetching && currentPage === 1) ? <CustomSpinner /> :
         <InfiniteScroll
             dataLength={contents.length}
             next={() => fetchNextPage()}
             hasMore={hasNextPage ?? false}
-            loader={<CustomSpinner />}
+            loader={<Center> <CustomSpinner /></Center>}
             scrollThreshold={0.9}
         >
             <VStack spacing={8} maxWidth="500px">
