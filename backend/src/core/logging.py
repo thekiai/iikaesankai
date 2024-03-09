@@ -40,19 +40,19 @@ def configure_logging():
         "[%(levelname)s]\t%(asctime)s.%(msecs)dZ\t%(levelno)s\t%(message)s\n",
         "%Y-%m-%dT%H:%M:%S",
     )
-    if settings.env_name in ["prod", "dev"]:
-        handler.setFormatter(formatter)
-    if logger.hasHandlers():
-        logger.handlers.clear()
-    logger.addHandler(handler)
-    alchemy_logger = logging.getLogger("sqlalchemy")
-    if alchemy_logger.hasHandlers():
-        alchemy_logger.handlers.clear()
-    alchemy_logger.addHandler(handler)
-    if settings.env_name in ["prod", "dev"]:
-        alchemy_logger.setLevel(logging.INFO)
+    # if settings.env_name in ["prod", "dev"]:
+    #     handler.setFormatter(formatter)
+    # if logger.hasHandlers():
+    #     logger.handlers.clear()
+    # logger.addHandler(handler)
+    # alchemy_logger = logging.getLogger("sqlalchemy")
+    # if alchemy_logger.hasHandlers():
+    #     alchemy_logger.handlers.clear()
+    # alchemy_logger.addHandler(handler)
+    # if settings.env_name in ["prod", "dev"]:
+    #     alchemy_logger.setLevel(logging.INFO)
 
-    logger.propagate = False
-    alchemy_logger.propagate = False
+    # logger.propagate = False
+    # alchemy_logger.propagate = False
 
     return logger
