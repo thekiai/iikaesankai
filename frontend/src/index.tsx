@@ -20,12 +20,10 @@ const root = ReactDOM.createRoot(container)
 root.render(
   <QueryClientProvider client={queryClient}>
     <BrowserRouter>
-      <React.StrictMode>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/contents/:content_id" element={<ContentPage />} />
-        </Routes>
-      </React.StrictMode>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/contents/:content_id" element={<ContentPage />} />
+      </Routes>
     </BrowserRouter>
     <ReactQueryDevtools />
   </QueryClientProvider>
