@@ -221,8 +221,8 @@ async def get_contents(
 ):
     contents = get_contents_by_order(
         session,
-        skip=(pagination.page - 1) * pagination.per_page,
-        limit=pagination.per_page,
+        page=pagination.page,
+        per_page=pagination.per_page,
         order_by=order_by,
     )
     return GetContentsResponse(contents=contents)

@@ -1,28 +1,35 @@
 import { useInfiniteQuery } from 'react-query';
 import { useState } from 'react';
 import axios from 'axios';
-import { VStack, Text, Box } from '@chakra-ui/react';
+import { VStack, Box } from '@chakra-ui/react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { ContentCard } from "./ContentCard";
 import { ContentType } from '../types/ContentType';
 import { API_ENDPOINT } from '../assets/constants';
 
-const PAGE_SIZE = 10;  // ページごとのアイテム数
+const PER_PAGE = 5;
 
 const fetchContents = async (page: number, order_by: string) => {
-    const response = await axios.get(`${API_ENDPOINT}/contents/?page=${page}&order_by=${order_by}`);
+    const response = await axios.get(`${API_ENDPOINT}/contents/?page=${page}&per_page=${PER_PAGE}&order_by=${order_by}`);
     return response.data.contents;
 };
 
 export const ContentList: React.FC = () => {
     const [orderBy, setOrderBy] = useState('latest');  // latestまたはranking
+    const [currentPage, setCurrentPage] = useState(1);
+
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(
         'contents',
-        ({ pageParam = 1 }) => fetchContents(pageParam, orderBy),
+        ({ pageParam = 1 }) => {
+            setCurrentPage(pageParam); // 現在のページ番号をセット
+            return fetchContents(pageParam, orderBy);
+        },
         {
-            getNextPageParam: (lastPage: any) => {
-                // 仮の実装: 無限スクロールの際に次のページ番号をインクリメント
-                return lastPage.length === PAGE_SIZE ? lastPage.length + 1 : undefined;
+            getNextPageParam: (lastPage, pages) => {
+                if (lastPage.length === PER_PAGE) {
+                    return currentPage + 1;
+                }
+                return undefined;  // 次のページがない場合
             },
             staleTime: 6000000, // 100分間キャッシュを利用
         }
@@ -45,6 +52,6 @@ export const ContentList: React.FC = () => {
                     </Box>
                 ))}
             </VStack>
-        </InfiniteScroll >
+        </InfiniteScroll>
     );
 };

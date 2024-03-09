@@ -11,7 +11,10 @@ from models.sqlmodels.paraphrase import Paraphrase
 
 
 def get_contents_by_order(
-    session: Session, skip: int = 0, limit: int = 10, order_by: OrderBy = OrderBy.latest
+    session: Session,
+    page: int = 0,
+    per_page: int = 10,
+    order_by: OrderBy = OrderBy.latest,
 ) -> list[Content]:
     order_column = Input.created_at
     if order_by == OrderBy.ranking:
@@ -25,8 +28,8 @@ def get_contents_by_order(
         )
         .filter(Input.deleted_at.is_(None))
         .order_by(desc(order_column))
-        .offset(skip)
-        .limit(limit * NUM_PARAPHRASES_PER_CONTENT)
+        .offset((page - 1) * per_page * NUM_PARAPHRASES_PER_CONTENT)
+        .limit(per_page * NUM_PARAPHRASES_PER_CONTENT)
         .all()
     )
 
