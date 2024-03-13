@@ -11,12 +11,15 @@ import {
     MenuList,
     MenuItem,
     useClipboard,
-    useToast
+    useToast,
+    Icon
 } from "@chakra-ui/react";
 import { API_ENDPOINT, mainColor, subColor } from "../assets/constants";
 import { ContentType } from "../types/ContentType";
 import axios from "axios";
 import { FiShare } from "react-icons/fi";
+import { FaHeart } from "react-icons/fa";
+
 export const ContentCard: React.FC<ContentType> = ({
     content_id,
     who,
@@ -99,7 +102,7 @@ export const ContentCard: React.FC<ContentType> = ({
             <VStack spacing={4}>
                 <HStack>
                     <Text fontSize="md">
-                        {votingCompleted ? "投票ありがとう✨" : "↓ どの言い換えがお好み？💛"}
+                        {votingCompleted ? "投票ありがとう✨" : "↓ 好きな言い換えに投票してね 💛"}
                     </Text>
                     {votingCompleted && <Text fontSize="sm" color="gray.500" >
                         投票数: {totalVotes}
@@ -131,8 +134,10 @@ export const ContentCard: React.FC<ContentType> = ({
                                 }
                                 position="relative"
                             >
-                                <Text fontSize="md">{paraphrase.content}</Text>
-
+                                <HStack>
+                                    <Icon mr={2} as={FaHeart} color={selectedOption === paraphrase.paraphrase_id ? 'red.300' : 'gray.300'} onClick={votingCompleted ? undefined : () => handleVote(paraphrase.paraphrase_id)} />
+                                    <Text>{paraphrase.content}</Text>
+                                </HStack>
                                 {votingCompleted && (
                                     <Box
                                         height="4px"
