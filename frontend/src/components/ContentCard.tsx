@@ -135,7 +135,12 @@ export const ContentCard: React.FC<ContentType> = ({
                                 position="relative"
                             >
                                 <HStack>
-                                    <Icon mr={2} as={FaHeart} color={selectedOption === paraphrase.paraphrase_id ? 'red.300' : 'gray.300'} onClick={votingCompleted ? undefined : () => handleVote(paraphrase.paraphrase_id)} />
+                                    <Icon
+                                        mr={2}
+                                        as={FaHeart}
+                                        color={votingCompleted ? (selectedOption === paraphrase.paraphrase_id ? "red.400" : "gray.200") : "gray.200"}
+                                        onClick={votingCompleted ? undefined : () => handleVote(paraphrase.paraphrase_id)}
+                                    />
                                     <Text>{paraphrase.content}</Text>
                                 </HStack>
                                 {votingCompleted && (
