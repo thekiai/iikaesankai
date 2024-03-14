@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Box,
     Text,
@@ -29,6 +29,16 @@ export const ContentCard: React.FC<ContentType> = ({
 }) => {
     const [selectedOption, setSelectedOption] = useState("");
     const [votingCompleted, setVotingCompleted] = useState(false);
+    const [isNewVote, setIsNewVote] = useState(false);
+
+    useEffect(() => {
+        // ローカルストレージから投票結果を読み込む
+        const savedVote = localStorage.getItem(`vote_${content_id}`);
+        if (savedVote) {
+            setSelectedOption(savedVote);
+            setVotingCompleted(true);
+        }
+    }, [content_id]);
 
     const handleVote = async (paraphrase_id: string) => {
         setSelectedOption(paraphrase_id);
@@ -36,8 +46,11 @@ export const ContentCard: React.FC<ContentType> = ({
             await axios.post(`${API_ENDPOINT}/vote/`, {
                 paraphrase_id: paraphrase_id,
             });
+            // ローカルストレージに投票結果を保存する
+            localStorage.setItem(`vote_${content_id}`, paraphrase_id);
 
             setVotingCompleted(true);
+            setIsNewVote(true);
         } catch (error) {
             console.error("投票エラー:", error);
         }
@@ -49,10 +62,13 @@ export const ContentCard: React.FC<ContentType> = ({
     const toast = useToast();
     const cardBorderColor = useColorModeValue("gray.200", "gray.700");
     const selectedCardColor = useColorModeValue("gray.100", "gray.700");
-    const totalVotes = 1 + paraphrases.reduce(
+    let totalVotes: number = paraphrases.reduce(
         (acc, paraphrase) => acc + paraphrase.vote_count,
         0
     );
+    if (!votingCompleted) {
+        totalVotes++;
+    }
     const handleCopyClick = () => {
         onCopy();
         toast({
@@ -107,7 +123,10 @@ export const ContentCard: React.FC<ContentType> = ({
 
                 </HStack>
                 {paraphrases.map((paraphrase) => {
-                    const voteCount = selectedOption === paraphrase.paraphrase_id ? paraphrase.vote_count + 1 : paraphrase.vote_count;
+                    let voteCount = paraphrase.vote_count;
+                    if (selectedOption === paraphrase.paraphrase_id && isNewVote) {
+                        voteCount++;
+                    }
 
                     const votePercentage =
                         totalVotes === 0 ? 0 : (voteCount / totalVotes) * 100;
