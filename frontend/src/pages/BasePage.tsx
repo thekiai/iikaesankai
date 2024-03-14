@@ -84,9 +84,9 @@ export const BasePage: React.FC<BasePageProps> = ({ children }) => {
                             borderColor={mainColor}
                             size="md"
                             onClick={onOpenInput}
-                            _hover={{ backgroundColor: "white", color: mainColor }}
+                            _hover={{ backgroundColor: mainColor, color: "white" }}
                             isLoading={loading}
-                            borderRadius="full"
+                            borderRadius="md"
                         >
                             いいかえて！
                         </Button>
