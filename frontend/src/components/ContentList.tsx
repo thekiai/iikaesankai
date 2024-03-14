@@ -80,7 +80,7 @@ export const ContentList: React.FC = () => {
             <Tabs position="relative" variant="line" colorScheme="black">
                 <TabList style={{ justifyContent: 'center' }}>
                     <Tab color="gray.600">👑 ランキング</Tab>
-                    <Tab color="gray.600">🐣 新着</Tab>
+                    <Tab color="gray.600">✨ 新着</Tab>
                 </TabList>
 
                 <TabPanels>
