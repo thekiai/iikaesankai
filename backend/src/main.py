@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from fastapi import BackgroundTasks, Depends, FastAPI
+from fastapi import BackgroundTasks, Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from openai import OpenAI
 from sqlalchemy.orm import Session
@@ -148,7 +148,7 @@ async def post_iikae(
 
         if "無効な入力かい！" in generated_message:
             logger.info(f"Got invalid input: {iikae_request}")
-            raise ValueError("Invalid input")
+            raise HTTPException(status_code=400, detail="Invalid input")
         else:
             logger.info(f"iikae_request: {iikae_request}")
 
