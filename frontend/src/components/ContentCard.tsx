@@ -175,7 +175,7 @@ export const ContentCard: React.FC<ContentType> = ({
 
                                 {votingCompleted && (
                                     <Text fontSize="sm" color="gray.500" mt={2}>
-                                        {`${votePercentage.toFixed(0)}% (${voteCount} 票)`}
+                                        {`${votePercentage.toFixed(0)}% [${voteCount} 票]`}
                                     </Text>
                                 )}
                             </Card>
