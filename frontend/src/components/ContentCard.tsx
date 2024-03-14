@@ -150,6 +150,7 @@ export const ContentCard: React.FC<ContentType> = ({
                                     votingCompleted ? {} : { background: selectedCardColor }
                                 }
                                 position="relative"
+                                align="end"
                             >
                                 <HStack>
                                     <Icon
