@@ -86,7 +86,7 @@ export const ContentList: React.FC = () => {
                 <TabPanels>
                     <TabPanel>
                         {rankingIsFetching && rankingCurrentPage === 1 ? (
-                            <CustomSpinner />
+                            <Center> <CustomSpinner /> </Center>
                         ) : (
                             <InfiniteScroll
                                 dataLength={rankingContents.length}
@@ -119,7 +119,7 @@ export const ContentList: React.FC = () => {
                     </TabPanel>
                     <TabPanel>
                         {latestIsFetching && latestCurrentPage === 1 ? (
-                            <CustomSpinner />
+                            <Center> <CustomSpinner /> </Center>
                         ) : (
                             <InfiniteScroll
                                 dataLength={latestContents.length}
