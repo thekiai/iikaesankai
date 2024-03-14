@@ -102,11 +102,9 @@ export const ContentCard: React.FC<ContentType> = ({
             <VStack spacing={4}>
                 <HStack>
                     <Text fontSize="md">
-                        {votingCompleted ? "投票ありがとう✨" : "↓ 好きな言い換えに投票してね 💛"}
+                        {!votingCompleted && "↓ 好きな言い換えに投票してね！"}
                     </Text>
-                    {votingCompleted && <Text fontSize="sm" color="gray.500" >
-                        投票数: {totalVotes}
-                    </Text>}
+
                 </HStack>
                 {paraphrases.map((paraphrase) => {
                     const voteCount = selectedOption === paraphrase.paraphrase_id ? paraphrase.vote_count + 1 : paraphrase.vote_count;
