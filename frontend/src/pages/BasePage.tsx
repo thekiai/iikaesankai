@@ -26,6 +26,7 @@ export const BasePage: React.FC<BasePageProps> = ({ children }) => {
     const [loading, setLoading] = useState(false);
     const [newContent, setNewContent] = useState<ContentType | null>();
     const [isFormValid, setIsFormValid] = useState(false);
+    const [isInvalidInput, setIsInvalidInput] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, label: string) => {
         const updatedFormData = {
@@ -44,8 +45,12 @@ export const BasePage: React.FC<BasePageProps> = ({ children }) => {
             onCloseInput();
             const result = await axios.post(`${API_ENDPOINT}/iikae/`, formData);
             setNewContent(result.data.content);
+            setIsInvalidInput(false);
             onOpen();
         } catch (error: any) {
+            if (error.response.status === 400) {
+                setIsInvalidInput(true);
+            }
             setNewContent(null);
             onOpen();
             console.error(error);
@@ -103,15 +108,19 @@ export const BasePage: React.FC<BasePageProps> = ({ children }) => {
                 </CustomModal>
 
                 <CustomModal isOpen={isOpen} onClose={handleModalClose}>
-                    {newContent ? <ContentCard
-                        content_id={newContent.content_id}
-                        who={newContent.who}
-                        what={newContent.what}
-                        detail={newContent.detail}
-                        paraphrases={newContent.paraphrases}
-                    /> : <Text>
-                        何かエラーが起きたみたい😭 ごめんだけどもう一度試してみてね。
-                    </Text>}
+                    {isInvalidInput ?
+                        <Text>
+                            ちょっと不適切な言葉が含まれてるかも🤔 他の言い方で試してみてね
+                        </Text>
+                        : newContent ? <ContentCard
+                            content_id={newContent.content_id}
+                            who={newContent.who}
+                            what={newContent.what}
+                            detail={newContent.detail}
+                            paraphrases={newContent.paraphrases}
+                        /> : <Text>
+                            何かエラーが起きたみたい😭 ごめんだけどもう一度試してみてね。
+                        </Text>}
                 </CustomModal>
                 {children}
             </VStack>
