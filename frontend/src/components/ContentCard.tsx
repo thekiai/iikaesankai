@@ -66,7 +66,7 @@ export const ContentCard: React.FC<ContentType> = ({
         (acc, paraphrase) => acc + paraphrase.vote_count,
         0
     );
-    if (!votingCompleted) {
+    if (isNewVote) {
         totalVotes++;
     }
     const handleCopyClick = () => {
